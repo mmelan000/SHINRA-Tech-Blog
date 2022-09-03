@@ -4,10 +4,8 @@ const { User, Blog } = require('../../models');
 // get all
 router.get('/', async (req, res) => {
   try{
-    const userData = await User.findAll();
-    // {
-    //     include: [{ model: Blog}]
-    //   }
+    const userData = await User.findAll({include: [{ model: Blog }]});
+
 
     res.status(200).json(userData);
   } catch {
@@ -53,18 +51,21 @@ router.post('/', async (req, res) => {
 });
 // update one by id
 router.put('/:id', async (req, res) => {
+// TODO: add session check to make sure user is only editing their information.
+
   try{
     const userData = await User.findByPk(req.params.id);
+
+    if (!userData) {
+        res.status(404).json({ message: `No user found with ID: ${req.params.id}` });
+        return;
+    }
+
     const updateUserData = await User.update(req.body, {
       where: {
         id: req.params.id,
       },
     });
-
-    if (!userData) {
-      res.status(404).json({ message: `No user found with ID: ${req.params.id}` });
-      return;
-    }
   
     if (!updateUserData[0]) {
       res.status(400).json({ message: `No user data updated for ID: ${req.params.id}` });
@@ -72,13 +73,15 @@ router.put('/:id', async (req, res) => {
     };
 
     res.status(200).json(updateUserData);
-  } catch {
+  } catch (err) {
     res.status(500).json(err);
   };
 
 });
 // delete one by id
 router.delete('/:id', async (req, res) => {
+// TODO: add session check to make sure user is only deleting their information.
+
   try {
     const deleteUserData = await User.destroy({
       where: {
