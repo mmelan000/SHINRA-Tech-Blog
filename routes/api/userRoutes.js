@@ -1,11 +1,15 @@
 console.log('/routes/api/userRoutes.js');
 const router = require('express').Router();
-const { User, Blog } = require('../../models');
+const { User, Blog, Reply } = require('../../models');
 // get all
 router.get('/', async (req, res) => {
-  try{
-    const userData = await User.findAll({include: [{ model: Blog }]});
-
+  try {
+    const userData = await User.findAll({
+      include: [
+        { model: Blog, include: { model: Reply, include: { model: User } } },
+        { model: Reply, include: { model: Blog, include: { model: User } } },
+      ],
+    });
 
     res.status(200).json(userData);
   } catch {
@@ -14,13 +18,15 @@ router.get('/', async (req, res) => {
 });
 // get one by id
 router.get('/:id', async (req, res) => {
-  try{
+  try {
     const userData = await User.findByPk(req.params.id, {
-      include: [{ model: Blog }]
+      include: [{ model: Blog }, { model: Reply }],
     });
 
     if (!userData) {
-      res.status(404).json({ message: `No user found with ID: ${req.params.id}` });
+      res
+        .status(404)
+        .json({ message: `No user found with ID: ${req.params.id}` });
       return;
     }
 
@@ -38,9 +44,9 @@ router.post('/', async (req, res) => {
     console.log(password);
 
     const newUserData = await User.create({
-        username,
-        email,
-        password
+      username,
+      email,
+      password,
     });
     console.log(newUserData);
     res.status(200).json(newUserData);
@@ -51,14 +57,16 @@ router.post('/', async (req, res) => {
 });
 // update one by id
 router.put('/:id', async (req, res) => {
-// TODO: add session check to make sure user is only editing their information.
+  // TODO: add session check to make sure user is only editing their information.
 
-  try{
+  try {
     const userData = await User.findByPk(req.params.id);
 
     if (!userData) {
-        res.status(404).json({ message: `No user found with ID: ${req.params.id}` });
-        return;
+      res
+        .status(404)
+        .json({ message: `No user found with ID: ${req.params.id}` });
+      return;
     }
 
     const updateUserData = await User.update(req.body, {
@@ -66,21 +74,22 @@ router.put('/:id', async (req, res) => {
         id: req.params.id,
       },
     });
-  
+
     if (!updateUserData[0]) {
-      res.status(400).json({ message: `No user data updated for ID: ${req.params.id}` });
+      res
+        .status(400)
+        .json({ message: `No user data updated for ID: ${req.params.id}` });
       return;
-    };
+    }
 
     res.status(200).json(updateUserData);
   } catch (err) {
     res.status(500).json(err);
-  };
-
+  }
 });
 // delete one by id
 router.delete('/:id', async (req, res) => {
-// TODO: add session check to make sure user is only deleting their information.
+  // TODO: add session check to make sure user is only deleting their information.
 
   try {
     const deleteUserData = await User.destroy({
@@ -90,7 +99,9 @@ router.delete('/:id', async (req, res) => {
     });
 
     if (!deleteUserData) {
-      res.status(404).json({ message: `No user found with ID: ${req.params.id}` });
+      res
+        .status(404)
+        .json({ message: `No user found with ID: ${req.params.id}` });
       return;
     }
 
