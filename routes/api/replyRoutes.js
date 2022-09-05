@@ -16,18 +16,18 @@ router.get('/', async (req, res) => {
 // get one by id
 router.get('/:id', async (req, res) => {
   try {
-    const blogData = await Blog.findByPk(req.params.id, {
-      include: [{ model: User }, { model: Reply, include: { model: User } }],
+    const userData = await User.findByPk(req.params.id, {
+      include: [{ model: Blog }],
     });
 
-    if (!blogData) {
+    if (!userData) {
       res
         .status(404)
-        .json({ message: `No blog found with ID: ${req.params.id}` });
+        .json({ message: `No user found with ID: ${req.params.id}` });
       return;
     }
 
-    res.status(200).json(blogData);
+    res.status(200).json(userData);
   } catch {
     res.status(500).json(err);
   }
@@ -35,7 +35,10 @@ router.get('/:id', async (req, res) => {
 // create one
 router.post('/', async (req, res) => {
   try {
-    const { blog_text } = req.body;
+    const { username, email, password } = req.body;
+    console.log(username);
+    console.log(email);
+    console.log(password);
 
     const newUserData = await User.create({
       username,
