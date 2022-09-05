@@ -4,11 +4,11 @@ const { User, Blog, Reply } = require('../../models');
 // get all
 router.get('/', async (req, res) => {
   try {
-    const blogData = await Blog.findAll({
-      include: [{ model: User }, { model: Reply, include: { model: User } }],
+    const replyData = await Reply.findAll({
+      include: [{ model: User }, { model: Blog, include: { model: User } }],
     });
 
-    res.status(200).json(blogData);
+    res.status(200).json(replyData);
   } catch {
     res.status(500).json(err);
   }
@@ -16,37 +16,35 @@ router.get('/', async (req, res) => {
 // get one by id
 router.get('/:id', async (req, res) => {
   try {
-    const userData = await User.findByPk(req.params.id, {
-      include: [{ model: Blog }],
+    const replyData = await Reply.findByPk(req.params.id, {
+      include: [{ model: User }, { model: Blog, include: { model: User } }],
     });
 
-    if (!userData) {
+    if (!replyData) {
       res
         .status(404)
-        .json({ message: `No user found with ID: ${req.params.id}` });
+        .json({ message: `No reply found with ID: ${req.params.id}` });
       return;
     }
 
-    res.status(200).json(userData);
+    res.status(200).json(replyData);
   } catch {
     res.status(500).json(err);
   }
 });
 // create one
 router.post('/', async (req, res) => {
+  // TODO: add auth
   try {
-    const { username, email, password } = req.body;
-    console.log(username);
-    console.log(email);
-    console.log(password);
+    const { reply_text, user_id, blog_id } = req.body;
 
-    const newUserData = await User.create({
-      username,
-      email,
-      password,
+    const newReplyData = await Reply.create({
+      reply_text,
+      user_id,
+      blog_id,
     });
-    console.log(newUserData);
-    res.status(200).json(newUserData);
+    console.log(newReplyData);
+    res.status(200).json(newReplyData);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
@@ -57,29 +55,29 @@ router.put('/:id', async (req, res) => {
   // TODO: add session check to make sure user is only editing their information.
 
   try {
-    const userData = await User.findByPk(req.params.id);
+    const replyData = await Reply.findByPk(req.params.id);
 
-    if (!userData) {
+    if (!replyData) {
       res
         .status(404)
-        .json({ message: `No user found with ID: ${req.params.id}` });
+        .json({ message: `No reply found with ID: ${req.params.id}` });
       return;
     }
 
-    const updateUserData = await User.update(req.body, {
+    const updateReplyData = await Reply.update(req.body, {
       where: {
         id: req.params.id,
       },
     });
 
-    if (!updateUserData[0]) {
+    if (!updateReplyData[0]) {
       res
         .status(400)
-        .json({ message: `No user data updated for ID: ${req.params.id}` });
+        .json({ message: `No reply data updated for ID: ${req.params.id}` });
       return;
     }
 
-    res.status(200).json(updateUserData);
+    res.status(200).json(updateReplyData);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -89,20 +87,20 @@ router.delete('/:id', async (req, res) => {
   // TODO: add session check to make sure user is only deleting their information.
 
   try {
-    const deleteUserData = await User.destroy({
+    const deleteReplyData = await Reply.destroy({
       where: {
         id: req.params.id,
       },
     });
 
-    if (!deleteUserData) {
+    if (!deleteReplyData) {
       res
         .status(404)
-        .json({ message: `No user found with ID: ${req.params.id}` });
+        .json({ message: `No reply found with ID: ${req.params.id}` });
       return;
     }
 
-    res.status(200).json(deleteUserData);
+    res.status(200).json(deleteReplyData);
   } catch (err) {
     res.status(500).json(err);
   }
