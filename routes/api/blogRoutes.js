@@ -1,4 +1,4 @@
-console.log('/routes/api/userRoutes.js');
+console.log('/routes/api/blogRoutes.js');
 const router = require('express').Router();
 const { User, Blog, Reply } = require('../../models');
 // get all
@@ -34,16 +34,17 @@ router.get('/:id', async (req, res) => {
 });
 // create one
 router.post('/', async (req, res) => {
+  // TODO: add auth
   try {
-    const { blog_text } = req.body;
+    const { blog_text, user_id } = req.body;
 
-    const newUserData = await User.create({
-      username,
-      email,
-      password,
+    const newBlogData = await Blog.create({
+      blog_text,
+      user_id,
     });
-    console.log(newUserData);
-    res.status(200).json(newUserData);
+
+    console.log(newBlogData);
+    res.status(200).json(newBlogData);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
@@ -54,29 +55,29 @@ router.put('/:id', async (req, res) => {
   // TODO: add session check to make sure user is only editing their information.
 
   try {
-    const userData = await User.findByPk(req.params.id);
+    const blogData = await Blog.findByPk(req.params.id);
 
-    if (!userData) {
+    if (!blogData) {
       res
         .status(404)
-        .json({ message: `No user found with ID: ${req.params.id}` });
+        .json({ message: `No blog found with ID: ${req.params.id}` });
       return;
     }
 
-    const updateUserData = await User.update(req.body, {
+    const updateBlogData = await Blog.update(req.body, {
       where: {
         id: req.params.id,
       },
     });
 
-    if (!updateUserData[0]) {
+    if (!updateBlogData[0]) {
       res
         .status(400)
-        .json({ message: `No user data updated for ID: ${req.params.id}` });
+        .json({ message: `No blog data updated for ID: ${req.params.id}` });
       return;
     }
 
-    res.status(200).json(updateUserData);
+    res.status(200).json(updateBlogData);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -86,20 +87,20 @@ router.delete('/:id', async (req, res) => {
   // TODO: add session check to make sure user is only deleting their information.
 
   try {
-    const deleteUserData = await User.destroy({
+    const deleteBlogData = await Blog.destroy({
       where: {
         id: req.params.id,
       },
     });
 
-    if (!deleteUserData) {
+    if (!deleteBlogData) {
       res
         .status(404)
-        .json({ message: `No user found with ID: ${req.params.id}` });
+        .json({ message: `No blog found with ID: ${req.params.id}` });
       return;
     }
 
-    res.status(200).json(deleteUserData);
+    res.status(200).json(deleteBlogData);
   } catch (err) {
     res.status(500).json(err);
   }
