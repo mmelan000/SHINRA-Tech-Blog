@@ -11,6 +11,10 @@ Blog.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    blog_title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     blog_text: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -21,6 +25,10 @@ Blog.init(
         model: 'user',
         key: 'id',
       },
+    },
+    date_created: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {

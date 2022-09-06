@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
         .json({ message: `No blog found with ID: ${req.params.id}` });
       return;
     }
-
+    console.log(blogData);
     res.status(200).json(blogData);
   } catch {
     res.status(500).json(err);
