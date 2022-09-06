@@ -2,7 +2,7 @@ console.log('/route/homeRoutes.js');
 const router = require('express').Router();
 const { User, Blog, Reply } = require('../models');
 
-// GET all galleries for homepage
+// GET all blogs for homepage
 router.get('/', async (req, res) => {
   try {
     const allBlogs = await Blog.findAll({
@@ -22,32 +22,21 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET one gallery
-// router.get('/gallery/:id', async (req, res) => {
-//   try {
-//     const dbGalleryData = await Gallery.findByPk(req.params.id, {
-//       include: [
-//         {
-//           model: Painting,
-//           attributes: [
-//             'id',
-//             'title',
-//             'artist',
-//             'exhibition_date',
-//             'filename',
-//             'description',
-//           ],
-//         },
-//       ],
-//     });
+// GET one blog
+router.get('/blog/:id', async (req, res) => {
+  try {
+    const blogData = await Blog.findByPk(req.params.id, {
+      attributes: ['blog_title', 'blog_text', 'date_created'],
+      include: [{ mode: User, attributes: ['username'] }],
+    });
 
-//     const gallery = dbGalleryData.get({ plain: true });
-//     res.render('gallery', { gallery, loggedIn: req.session.loggedIn });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json(err);
-//   }
-// });
+    const gallery = dbGalleryData.get({ plain: true });
+    res.render('gallery', { gallery, loggedIn: req.session.loggedIn });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 // // GET one painting
 // router.get('/painting/:id', async (req, res) => {
