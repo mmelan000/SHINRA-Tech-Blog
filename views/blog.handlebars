@@ -7,9 +7,12 @@
         <div class="card-body">
             <div class="card-text">
                 <p>
-                    {{blog_text}}
+                    {{ blog_text }}
                 </p>
             </div>
         </div>
     </div>
+    {{#each replies as |reply|}}
+    {{> reply-layout}}
+    {{/each}}
 </div>

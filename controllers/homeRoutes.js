@@ -27,17 +27,42 @@ router.get('/blog/:id', async (req, res) => {
   try {
     const blogData = await Blog.findByPk(req.params.id, {
       attributes: ['blog_title', 'blog_text', 'date_created'],
-      include: [{ mode: User, attributes: ['username'] }],
+      include: [
+        { model: User, attributes: ['username'] },
+        {
+          model: Reply,
+          attributes: ['reply_text', 'date_created'],
+          include: { model: User, attributes: ['username'] },
+        },
+      ],
     });
 
-    const gallery = dbGalleryData.get({ plain: true });
-    res.render('gallery', { gallery, loggedIn: req.session.loggedIn });
+    console.log(blogData);
+
+    if (!blogData) {
+      res.render('404');
+      return;
+    }
+    // res.status(200).json(blogData);
+    const loadBlog = await blogData.get({ plain: true });
+    console.log(loadBlog.replies);
+
+    res.render('blog', loadBlog);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 });
 
+router.get('/login', (req, res) => {
+  res.render('login');
+  return;
+});
+
+router.get('/signup', (req, res) => {
+  res.render('signup');
+  return;
+});
 // // GET one painting
 // router.get('/painting/:id', async (req, res) => {
 //   try {
