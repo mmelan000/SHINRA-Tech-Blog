@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
     const allBlogs = await Blog.findAll({
       attributes: ['id', 'blog_title', 'date_created'],
       include: [{ model: User, attributes: ['username'] }],
+      order: [['date_created', 'DESC']],
     });
 
     const blogs = allBlogs.map((blogs) => blogs.get({ plain: true }));
@@ -70,6 +71,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
   try {
     const allBlogs = await Blog.findAll({
       where: { user_id: req.session.user },
+      order: [['date_created', 'DESC']],
     });
 
     const blogs = allBlogs.map((blogs) => blogs.get({ plain: true }));
@@ -77,7 +79,19 @@ router.get('/dashboard', withAuth, async (req, res) => {
     res.render('dashboard', {
       blogs,
       loggedIn: req.session.loggedIn,
-      user,
+      user: req.session.user,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/post', withAuth, async (req, res) => {
+  try {
+    res.render('post', {
+      loggedIn: req.session.loggedIn,
+      user: req.session.user,
     });
   } catch (err) {
     console.log(err);

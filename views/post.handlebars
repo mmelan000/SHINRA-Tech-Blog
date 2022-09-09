@@ -1,16 +1,27 @@
 <div class='container'>
-  <form class='col-12 form float-right'>
-    <h4 class='mb-3'>Post New Blog</h4>
-    <textarea
-      class='form-control'
-      id='typePost'
-      placeholder='Enter text here...'
-    ></textarea>
-    <button
-      type='submit'
-      class='float-right btn btn-primary mb-2'
-      id='postBtn'
-    >Create</button>
+  <form class='col-12 float-right'>
+    <div class='form-group'>
+      <label class='mb-3'>Title</label>
+      <input
+        type='text'
+        class='form-control'
+        placeholder='Enter title here...'
+        id='typePostTitle'
+      />
+    </div>
+    <div class='form-group'>
+      <label class='mb-3'>What do you have to say?</label>
+      <textarea
+        class='form-control'
+        id='typePostText'
+        placeholder='Enter text here...'
+      ></textarea>
+      <button
+        type='submit'
+        class='float-right btn btn-primary mb-2 postBtn'
+        id='{{user}}'
+      >Create</button>
+    </div>
   </form>
   <script src='/javascript/post.js'></script>
 </div>
