@@ -45,10 +45,11 @@ router.get('/blog/:id', async (req, res) => {
 
     const loadBlog = await blogData.get({ plain: true });
 
-    console.log(loadBlog);
-    console.log({ loadBlog });
-
-    res.render('blog', { loadBlog, loggedIn: req.session.loggedIn });
+    res.render('blog', {
+      loadBlog,
+      loggedIn: req.session.loggedIn,
+      user: req.session.user,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -73,16 +74,17 @@ router.get('/dashboard', withAuth, async (req, res) => {
 
     const blogs = allBlogs.map((blogs) => blogs.get({ plain: true }));
 
-    console.log(blogs);
-
     res.render('dashboard', {
       blogs,
       loggedIn: req.session.loggedIn,
+      user,
     });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 });
+
+router;
 
 module.exports = router;
