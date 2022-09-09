@@ -9,9 +9,9 @@ router.get('/', async (req, res) => {
       attributes: ['id', 'blog_title', 'date_created'],
       include: [{ model: User, attributes: ['username'] }],
     });
-    console.log(allBlogs);
+
     const blogs = allBlogs.map((blogs) => blogs.get({ plain: true }));
-    console.log(blogs);
+
     res.render('home', {
       blogs,
       loggedIn: req.session.loggedIn,
@@ -37,17 +37,17 @@ router.get('/blog/:id', async (req, res) => {
       ],
     });
 
-    console.log(blogData);
-
     if (!blogData) {
       res.render('404');
       return;
     }
-    // res.status(200).json(blogData);
-    const loadBlog = await blogData.get({ plain: true });
-    console.log(loadBlog.replies);
 
-    res.render('blog', loadBlog);
+    const loadBlog = await blogData.get({ plain: true });
+
+    console.log(loadBlog);
+    console.log({ loadBlog });
+
+    res.render('blog', { loadBlog, loggedIn: req.session.loggedIn });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

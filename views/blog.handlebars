@@ -1,18 +1,28 @@
 <div class="container">
     <div class="card">
         <div class="align-items-center card-header">
-            <h5 class="float-left">{{blog_title}}</h5>
-            <p class="float text-right">Posted by {{user.username}} at {{format_date date_created}}</p>        
+            <h5 class="float-left">{{loadBlog.blog_title}}</h5>
+            <p class="float text-right">Posted by {{loadBlog.user.username}} at {{format_date loadBlog.date_created}}</p>
         </div>
         <div class="card-body">
             <div class="card-text">
                 <p>
-                    {{ blog_text }}
+                    {{loadBlog.blog_text}}
                 </p>
             </div>
         </div>
     </div>
-    {{#each replies as |reply|}}
+
+    {{#each loadBlog.replies as |reply|}}
     {{> reply-layout}}
     {{/each}}
+    {{#if loggedIn}}
+    <br />
+    <form class="col-12 form float-right">
+        <textarea class="form-control" id="typeReply" placeholder="Enter text here..."></textarea>
+        <button type="submit" class="float-right btn btn-primary mb-2" id="replyBtn">Reply</button>
+    </form>
+    <script src="/javascript/reply.js"></script>
+    {{/if}}
 </div>
+    
