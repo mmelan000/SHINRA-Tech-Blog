@@ -1,0 +1,28 @@
+<div class='container'>
+  <form class='col-12 float-right'>
+    <div class='form-group'>
+      <label class='mb-3'>Title</label>
+      <input
+        type='text'
+        class='form-control'
+        placeholder='Enter title here...'
+        id='typeEditTitle'
+      />
+    </div>
+    <div class='form-group'>
+      <label class='mb-3'>What do you have to say?</label>
+      <textarea
+        class='form-control'
+        id='typeEditText'
+        placeholder='Enter text here...'
+        value='testing'
+      >testing123</textarea>
+      <button
+        type='submit'
+        class='float-right btn btn-primary mb-2 editBtn'
+        id='{{user}}'
+      >Confirm Edits</button>
+    </div>
+  </form>
+  <script src='/javascript/edit.js'></script>
+</div>

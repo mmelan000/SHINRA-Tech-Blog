@@ -99,6 +99,18 @@ router.get('/post', withAuth, async (req, res) => {
   }
 });
 
+router.get('/edit/:id', withAuth, async (req, res) => {
+  try {
+    res.render('edit', {
+      loggedIn: req.session.loggedIn,
+      user: req.session.user,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 router;
 
 module.exports = router;
