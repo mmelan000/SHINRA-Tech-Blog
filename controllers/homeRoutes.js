@@ -1,6 +1,7 @@
 console.log('/route/homeRoutes.js');
 const router = require('express').Router();
 const { User, Blog, Reply } = require('../models');
+const withAuth = require('../utils/authorize.js');
 
 // GET all blogs for homepage
 router.get('/', async (req, res) => {
@@ -63,26 +64,25 @@ router.get('/signup', (req, res) => {
   res.render('signup');
   return;
 });
-// // GET one painting
-// router.get('/painting/:id', async (req, res) => {
-//   try {
-//     const dbPaintingData = await Painting.findByPk(req.params.id);
 
-//     const painting = dbPaintingData.get({ plain: true });
-//     res.render('painting', { painting, loggedIn: req.session.loggedIn });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json(err);
-//   }
-// });
+router.get('/dashboard', withAuth, async (req, res) => {
+  try {
+    const allBlogs = await Blog.findAll({
+      where: { user_id: req.session.user },
+    });
 
-// // Login route
-// router.get('/login', (req, res) => {
-//   if (req.session.loggedIn) {
-//     res.redirect('/');
-//     return;
-//   }
-//   res.render('login');
-// });
+    const blogs = allBlogs.map((blogs) => blogs.get({ plain: true }));
+
+    console.log(blogs);
+
+    res.render('dashboard', {
+      blogs,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;

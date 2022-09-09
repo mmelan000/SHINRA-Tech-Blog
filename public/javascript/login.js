@@ -1,6 +1,5 @@
 const loginFormHandler = async (event) => {
   event.preventDefault();
-  console.log('the button is working');
 
   const username = document.querySelector('#typeUsername').value.trim();
   const password = document.querySelector('#typePassword').value.trim();
@@ -18,13 +17,8 @@ const loginFormHandler = async (event) => {
       alert('Failed to log in.');
     }
   }
-  event.preventDefault();
 };
 
 document
   .querySelector('#login-form')
   .addEventListener('click', loginFormHandler);
-
-// document
-//   .querySelector('.signup-form')
-//   .addEventListener('submit', signupFormHandler);
