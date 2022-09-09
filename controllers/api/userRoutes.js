@@ -46,7 +46,16 @@ router.post('/', async (req, res) => {
       password,
     });
 
-    res.status(200).json(newUserData);
+    console.log(newUserData);
+
+    req.session.save(() => {
+      (req.session.loggedIn = true), (req.session.user = newUserData.id);
+
+      res.status(200).json({
+        user: newUserData,
+        message: 'You have created a new user and are now logged in!',
+      });
+    });
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
