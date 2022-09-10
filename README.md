@@ -71,8 +71,8 @@ THEN I am able to view comments but I am prompted to log in again before I can a
 
 ```
 DB_NAME=employees_db
-DB_USERNAME=YOUR_MYSQL_USERNAME_GOES_HERE (default is root)
-DB_PASSWORD=YOUR_MYSQL_PASSWORD_GOES_HERE
+DB_USER=YOUR_MYSQL_USERNAME_GOES_HERE (default is root)
+DB_PW=YOUR_MYSQL_PASSWORD_GOES_HERE
 SECRET=YOUR_SESSION_SECRET_GOES_HERE
 ```
 
