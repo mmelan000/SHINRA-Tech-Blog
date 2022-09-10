@@ -1,8 +1,6 @@
 const deletePost = async (event) => {
   event.preventDefault();
 
-  console.log(event.target.id);
-
   const response = await fetch(`/api/blogs/${event.target.id}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },

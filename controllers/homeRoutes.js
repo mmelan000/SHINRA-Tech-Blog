@@ -1,9 +1,8 @@
-console.log('/route/homeRoutes.js');
 const router = require('express').Router();
 const { User, Blog, Reply } = require('../models');
 const withAuth = require('../utils/authorize.js');
 
-// GET all blogs for homepage
+// homepage
 router.get('/', async (req, res) => {
   try {
     const allBlogs = await Blog.findAll({
@@ -19,12 +18,11 @@ router.get('/', async (req, res) => {
       loggedIn: req.session.loggedIn,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
 
-// GET one blog
+// blog page
 router.get('/blog/:id', async (req, res) => {
   try {
     const blogData = await Blog.findByPk(req.params.id, {
@@ -52,21 +50,20 @@ router.get('/blog/:id', async (req, res) => {
       user: req.session.user,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
-
+// login page
 router.get('/login', (req, res) => {
   res.render('login');
   return;
 });
-
+// signup page
 router.get('/signup', (req, res) => {
   res.render('signup');
   return;
 });
-
+// dashboard page
 router.get('/dashboard', withAuth, async (req, res) => {
   try {
     const allBlogs = await Blog.findAll({
@@ -82,11 +79,10 @@ router.get('/dashboard', withAuth, async (req, res) => {
       user: req.session.user,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
-
+// post blog page
 router.get('/post', withAuth, async (req, res) => {
   try {
     res.render('post', {
@@ -94,11 +90,10 @@ router.get('/post', withAuth, async (req, res) => {
       user: req.session.user,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
-
+// edit blog page
 router.get('/edit/:id', withAuth, async (req, res) => {
   try {
     res.render('edit', {
@@ -106,11 +101,8 @@ router.get('/edit/:id', withAuth, async (req, res) => {
       user: req.session.user,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
-
-router;
 
 module.exports = router;

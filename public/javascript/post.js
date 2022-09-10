@@ -5,12 +5,6 @@ const replyPost = async (event) => {
   const blog_text = document.querySelector('#typePostText').value;
   const user_id = event.target.id;
 
-  console.log(blog_title);
-  console.log(blog_text);
-  console.log(user_id);
-
-  console.log({ blog_title, blog_text, user_id });
-
   const response = await fetch(`/api/blogs/`, {
     method: 'POST',
     body: JSON.stringify({ blog_title, blog_text, user_id }),

@@ -1,6 +1,6 @@
-console.log('/routes/api/userRoutes.js');
 const router = require('express').Router();
 const { User, Blog, Reply } = require('../../models');
+const withAuth = require('../../utils/authorize.js');
 // get all
 router.get('/', async (req, res) => {
   try {
@@ -46,8 +46,6 @@ router.post('/', async (req, res) => {
       password,
     });
 
-    console.log(newUserData);
-
     req.session.save(() => {
       (req.session.loggedIn = true), (req.session.user = newUserData.id);
 
@@ -57,13 +55,11 @@ router.post('/', async (req, res) => {
       });
     });
   } catch (err) {
-    console.log(err);
     res.status(400).json(err);
   }
 });
 // update one by id
-router.put('/:id', async (req, res) => {
-  // TODO: add session check to make sure user is only editing their information.
+router.put('/:id', withAuth, async (req, res) => {
   try {
     const userData = await User.findByPk(req.params.id);
 
@@ -93,8 +89,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 // delete one by id
-router.delete('/:id', async (req, res) => {
-  // TODO: add session check to make sure user is only deleting their information.
+router.delete('/:id', withAuth, async (req, res) => {
   try {
     const deleteUserData = await User.destroy({
       where: {
@@ -114,7 +109,7 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json(err);
   }
 });
-
+// login route
 router.post('/login', async (req, res) => {
   try {
     const dbUserData = await User.findOne({
@@ -147,11 +142,10 @@ router.post('/login', async (req, res) => {
         .json({ user: dbUserData, message: 'You are now logged in!' });
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
-
+// logout route
 router.post('/logout', (req, res) => {
   if (req.session.loggedIn) {
     req.session.destroy(() => {

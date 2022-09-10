@@ -1,6 +1,7 @@
-console.log('/routes/api/blogRoutes.js');
 const router = require('express').Router();
 const { User, Blog, Reply } = require('../../models');
+const withAuth = require('../../utils/authorize.js');
+
 // get all
 router.get('/', async (req, res) => {
   try {
@@ -26,15 +27,14 @@ router.get('/:id', async (req, res) => {
         .json({ message: `No blog found with ID: ${req.params.id}` });
       return;
     }
-    console.log(blogData);
+
     res.status(200).json(blogData);
   } catch {
     res.status(500).json(err);
   }
 });
 // create one
-router.post('/', async (req, res) => {
-  // TODO: add auth
+router.post('/', withAuth, async (req, res) => {
   try {
     const { blog_title, blog_text, user_id } = req.body;
 
@@ -44,17 +44,13 @@ router.post('/', async (req, res) => {
       user_id,
     });
 
-    console.log(newBlogData);
     res.status(200).json(newBlogData);
   } catch (err) {
-    console.log(err);
     res.status(400).json(err);
   }
 });
 // update one by id
-router.put('/:id', async (req, res) => {
-  // TODO: add session check to make sure user is only editing their information.
-
+router.put('/:id', withAuth, async (req, res) => {
   try {
     const blogData = await Blog.findByPk(req.params.id);
 
@@ -84,9 +80,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 // delete one by id
-router.delete('/:id', async (req, res) => {
-  // TODO: add session check to make sure user is only deleting their information.
-
+router.delete('/:id', withAuth, async (req, res) => {
   try {
     const deleteBlogData = await Blog.destroy({
       where: {
