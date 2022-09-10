@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const sess = {
-  secret: process.env.SECRET,
+  secret: 'CookieMonster',
   cookie: {
     maxAge: 60 * 60 * 1000,
     httpOnly: true,
