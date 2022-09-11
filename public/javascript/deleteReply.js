@@ -1,4 +1,4 @@
-const deleteReply = async (event) => {
+const deletePost = async (event) => {
   event.preventDefault();
 
   const response = await fetch(`/api/replies/${event.target.id}`, {
@@ -13,4 +13,4 @@ const deleteReply = async (event) => {
   }
 };
 
-document.querySelector('.deleteBtn').addEventListener('click', deleteReply);
+document.querySelector('.deleteBtn').addEventListener('click', deletePost);
