@@ -31,8 +31,8 @@ router.get('/blog/:id', async (req, res) => {
         { model: User, attributes: ['username'] },
         {
           model: Reply,
-          attributes: ['reply_text', 'date_created'],
-          include: { model: User, attributes: ['username'] },
+          attributes: ['id', 'reply_text', 'date_created'],
+          include: { model: User, attributes: ['id', 'username'] },
         },
       ],
     });
@@ -43,6 +43,15 @@ router.get('/blog/:id', async (req, res) => {
     }
 
     const loadBlog = await blogData.get({ plain: true });
+    console.log(loadBlog.replies);
+
+    loadBlog.replies.forEach((v) => {
+      if (v.user.id === req.session.user) {
+        v.matchedUser = true;
+      }
+    });
+
+    console.log(loadBlog.replies);
 
     res.render('blog', {
       loadBlog,
@@ -97,6 +106,17 @@ router.get('/post', withAuth, async (req, res) => {
 router.get('/edit/:id', withAuth, async (req, res) => {
   try {
     res.render('edit', {
+      loggedIn: req.session.loggedIn,
+      user: req.session.user,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get('/editreply/:id', withAuth, async (req, res) => {
+  try {
+    res.render('editReply', {
       loggedIn: req.session.loggedIn,
       user: req.session.user,
     });

@@ -12,6 +12,16 @@
           at
           {{format_date date_created}}</p>
       </div>
+      {{#if matchedUser}}
+        <button class='float-right btn btn-primary deleteBtn' id='{{id}}'><i
+            class='fa-solid fa-trash-can'
+          ></i></button>
+        <a
+          class='float-right btn btn-primary border'
+          href='/editreply/{{id}}'
+        ><i class='fa-solid fa-pencil'></i></a>
+        <script src='deleteReply.js'></script>
+      {{/if}}
     </div>
   </div>
 </div>
