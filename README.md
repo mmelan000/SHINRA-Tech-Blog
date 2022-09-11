@@ -80,7 +80,7 @@ SECRET=YOUR_SESSION_SECRET_GOES_HERE
 
 ## Usage
 
-[Deployed Application on Heroku](https://protected-cove-02086.herokuapp.com/)
+[Deployed Application on Heroku](https://secure-hollows-02949.herokuapp.com/)
 
 ![App Screenshot](./public/images/SS1.png)
 
